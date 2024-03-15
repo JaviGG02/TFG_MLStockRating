@@ -3,9 +3,10 @@
 ## Estructura del proyecto
 Carpetas:
 - data: carpeta donde podemos encontrar los datos descargados, usados en la creación, entrenamiento y evaluación de modelos.
-
-Archivos:
-- obtain_data.py: archivo para la obtención de los datos financieros fundamentales y precios de las empresas del Nasdaq.
+- proto_app: carpeta donde se almacenan todos los archivos del prototipo de aplicación. En esta, destacamos:
+    + src: contiene la gestión del fronted, módulo creado empleando el framework de React.
+    + backend: contiene la gestión del backend, el cual emplea el framework de Flask.
+- research_development: carpeta donde se encuentran todos los archivos empleados para la investigación y desarrollo del proyecto: obtención y gestión de los datos, análisis y preprocesado y desarrollo de modelos ML
 
 ## Autor
 Javier García García - LinkedIn: https://www.linkedin.com/in/javier-garc%C3%ADa-garc%C3%ADa-1ba311229/
