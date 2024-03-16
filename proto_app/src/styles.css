@@ -1,0 +1,266 @@
+/* ESTILOS BUSQUEDA */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #A2E1D4; /* Este color corresponde al fondo turquesa claro */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden; /* Oculta el desbordamiento horizontal */
+}
+
+form {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 15rem;
+}
+
+.search_box {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  align-items: center;
+  top: 50rem;
+}
+
+.ticker_input[type="text"] {
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: none;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid #ccc;
+  width: 80%;
+  transition: border-color 0.3s;
+  text-align: center;
+  align-items: center;
+}
+
+.ticker_input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: #66bfbf; /* Color de acento para el borde inferior */
+}
+
+.search_button {
+  font-size: 1rem;
+  color: #fff;
+  background-color: #66bfbf; /* Color de acento para el botón */
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search_button:hover {
+  background-color: #558a8e; /* Color más oscuro para el efecto hover */
+}
+
+/* ANIMACION BUSQUEDA */
+@keyframes rotateBorder {
+    0% {
+        border-color: #66bfbf transparent transparent transparent;
+    }
+    25% {
+        border-color: transparent #66bfbf transparent transparent;
+    }
+    50% {
+        border-color: transparent transparent #66bfbf transparent;
+    }
+    75% {
+        border-color: transparent transparent transparent #66bfbf;
+    }
+    100% {
+        border-color: #66bfbf transparent transparent transparent;
+    }
+}
+
+.loading {
+    border: 10px solid transparent;
+    border-radius: 1rem;
+    position: relative;
+    animation: rotateBorder 1.5s linear infinite;
+}
+  
+/* overviewComponent.css */
+.container {
+    max-width: 960px; 
+    margin: auto; 
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  
+  .ticker {
+    font-size: 2em;
+    color: #2c3e50;
+  }
+  
+  .description {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .description_text {
+    font-size: 1em;
+    color: #34495e;
+    flex: 3; 
+    margin-right: 20px;
+    text-align: justify;
+  }
+
+  .sector {
+    color: #2c3e50;
+    font-size: 1.2em;
+    margin-top: 1em; 
+  }
+
+  .ratios {
+    flex: 1; 
+    padding: 20px;
+    margin: 0;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
+  }
+  
+  .ratio {
+    margin-bottom: 10px;
+  }
+  
+  .ratio strong {
+    display: block; 
+    color: #2c3e50;
+    margin-bottom: 5px;
+  }
+  
+/* financialTable.css */
+.results-div {
+  text-align: center;
+  width: 49%; /* ajusta según sea necesario */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.header {
+  width: 100%; 
+  text-align: center; 
+  margin-bottom: 20px; 
+}
+
+.financial-wrapper{
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+  overflow-x: auto;
+}
+
+.financial-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.financial-container {
+  overflow-x: auto;
+}
+
+.financial-caption {
+  text-align: center;
+  font-size: 1.5em; /* Ajusta según sea necesario para que coincida con el título principal */
+  font-weight: bold;
+  margin: 0 0 1em 0; /* Añade espacio debajo de la leyenda */
+  display: block; /* Hace que la leyenda se comporte como un bloque */
+}
+
+
+.table-wrapper {
+  margin-bottom: 1em; /* Añade espacio debajo de cada tabla */
+  width: 100%;
+}
+
+.financial-table {
+  border-collapse: collapse;
+  margin-bottom: 20px; 
+  table-layout: auto; /* Asegura que la tabla solo ocupe el ancho necesario */
+}
+
+.financial-table thead {
+  color: #333;
+}
+
+.financial-table thead th {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #333; 
+}
+
+.financial-table tbody td, .financial-table tbody th {
+  padding: 8px;
+  border-bottom: 3px solid #ddd; 
+}
+
+.financial-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f900; /* Fondo sólido para filas alternas */
+}
+
+.financial-table tbody tr:hover {
+  background-color: #eaeaea; 
+}
+
+.financial-title {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 0.5em; /* Ajusta según sea necesario */
+}
+
+.title-container {
+  text-align: center; 
+  padding: 10px 0; 
+}
+
+.financial-table h1 {
+  font-size: 1.5em;
+  color: #2c3e50; 
+  margin: 0;
+  padding: 20px 0; 
+}
+
+.financial-table caption {
+  caption-side: top; /* asegura que el título esté en la parte superior de la tabla */
+  text-align: center; /* centra el texto */
+  font-size: 1.2em; /* ajusta el tamaño del texto al deseado */
+  font-weight: bold; /* hace el texto en negrita */
+  color: #2c3e50; /* ajusta al color deseado */
+  padding: 10px 0; /* añade un poco de espacio alrededor del texto */
+  margin: 0; /* elimina cualquier margen por defecto */
+  background: transparent; /* o cualquier color de fondo que prefieras */
+}
+
+/* app.css */
+.root-div{
+  max-width: 100%; /* Así no superará el ancho de la ventana */
+}
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.graph-container {
+  width: 100%; /* Utiliza el 100% del contenedor padre */
+  max-width: 80vw; /* Máximo el 80% del ancho de la ventana */
+  margin: 20px auto; /* Centrado con margen */
+}
+
+.table-container {
+  width: auto; /* Elimina min-width si está causando problemas */
+  margin: 20px;
+}

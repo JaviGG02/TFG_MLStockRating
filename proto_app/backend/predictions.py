@@ -36,7 +36,17 @@ def make_predictions(data: pd.DataFrame):
                 predictions.append(float(pred.item()))
             break
 
-    calification = (predictions[-1] - data["sharePrice"].iloc[-1]) / predictions[-1]
+    pct_return = (predictions[-1] - data["sharePrice"].iloc[-1]) / predictions[-1]
+    if pct_return < 0:
+        calification = 1
+    elif pct_return < 5:
+        calification = 2
+    elif pct_return < 10:
+        calification = 3
+    elif pct_return < 15:
+        calification = 4;
+    else:
+        calification = 5
 
     return predictions, calification
 
@@ -46,8 +56,8 @@ def plot_data(ml_data: pd.DataFrame, predictions: list):
     :ml_data: dataframe con datos reales
     :predictions: lista de predicciones realizadas
     """
-    predictions_df = pd.DataFrame(predictions, columns=['predicted_1y_sharePrice'])
     ml_data['fiscalDateEnding'] = pd.to_datetime(ml_data['fiscalDateEnding'])
+    predictions_df = pd.DataFrame(predictions, columns=['predicted_1y_sharePrice'])
     predictions_df['fiscalDateEnding'] = ml_data['fiscalDateEnding'].apply(lambda x: x + timedelta(days=365))
 
     plt.figure(figsize=(16, 6))
