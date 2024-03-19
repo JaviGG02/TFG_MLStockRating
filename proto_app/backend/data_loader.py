@@ -14,9 +14,24 @@ with open(r"C:\Users\xavic\Escritorio\TFG_MLStockRating\proto_app\backend\config
 alphavantage_key = config["Alphavantage_key"]
 
 # Funciones auxiliares
-def download_financial_data(ticker: str):
+def replace_values_in_nested_dict(d: dict, old_values: list, new_value: str) -> dict:
     """
-    Funcion para la obtencion del historial de precios y los funadamentales de una empresaa
+    Funcion recursiva para quitar valores no deseados en un diccionario. Devuelve el diccionario cambiado.
+    :d: Diccionario a tratar.
+    :old_values: lista de valores a cambiar.
+    :new_value: valor de cambio.
+    """
+    for k, v in d.items():
+        if isinstance(v, dict):
+            d[k] = replace_values_in_nested_dict(v,old_values, new_value)
+        elif str(v) in old_values: 
+            d[k] = new_value
+    return d
+    
+def download_financial_data(ticker: str) -> (KeyError | dict):
+    """
+    Funcion para la obtencion del historial de precios y los funadamentales de una empresa. Devuelve el diccionario con 
+    toda la información descargada, y en caso de que no encuentre el símbolo, devuelve KeyError.
     :ticker: string con el ticker de la empresa
     """
     print(f"Obteniendo los datos de {ticker}")
@@ -30,6 +45,7 @@ def download_financial_data(ticker: str):
         r = requests.get(url)
         fundamentals = r.json()
         if not fundamentals:
+            print(f"Información sobre {ticker} no disponible")
             return KeyError(f"Información sobre {ticker} no disponible")
         # Caso de superar el limite de acccesos por minuto de la API 
         while 'Note' in fundamentals:
@@ -37,13 +53,18 @@ def download_financial_data(ticker: str):
             time.sleep(20)
             r = requests.get(url)
             fundamentals = r.json()
+
+        print(fundamentals.keys())
         result[element] = fundamentals
+
 
     return result
 
-def closest_price_from_df(fecha_objetivo: pd.Timestamp, df_prices: pd.DataFrame):
+def closest_price_from_df(fecha_objetivo: pd.Timestamp, df_prices: pd.DataFrame) -> (pd.Series | pd.DataFrame) :
     """
-    Funcion para obtener la fila del dataframe de precios con la fecha mas cercana al dia indicado
+    Funcion para obtener la fila del dataframe de precios con la fecha mas cercana al dia indicado.
+    Devuelve la línea de df_prices con el precio más cercano a la fecha objetivo en caso de haberlo encontrado, 
+    si no, devuelve una np.Series vacía
     """
     # Calcular la diferencia absoluta entre la fecha objetivo y todas las fechas en el indice
     diferencias = abs(df_prices.index - fecha_objetivo)
@@ -53,10 +74,13 @@ def closest_price_from_df(fecha_objetivo: pd.Timestamp, df_prices: pd.DataFrame)
         return pd.Series() # Devolvemos None
     return df_prices.loc[fecha_mas_cercana]
 
-def preprocess_financial_data(financials: dict):
+def preprocess_financial_data(financials: dict, need_prices:bool=False) -> (tuple[pd.DataFrame, pd.DataFrame] | pd.DataFrame):
     """
-    Función para el preprocesamiento, preparación y limpieza de los datos financieros. Devuelve un dataframe con toda la información necesaria para pasarsela al modelo
+    Función para el preprocesamiento, preparación y limpieza de los datos financieros. Devuelve un dataframe con toda la información 
+    necesaria para pasarsela al modelo.
+    Además devuelve df_prices, en caso de ser necesario
     :financials: Diccionario con las siguientes calves: TIME_SERIES_MONTHLY_ADJUSTED, INCOME_STAMENT, BALANCE_SHEET, CASH_FLOW y OVERVIEW
+    :need_prices: Condicion booleana que nos devolvera df_prices en caso de ser necesario
     """    
     print("Preparando los datos para ingestión del modelo")
 
@@ -108,7 +132,7 @@ def preprocess_financial_data(financials: dict):
     mean_price_by_sector_year = fundamentals.groupby(['sector', 'year'])['sharePrice'].mean().reset_index(name='meanSectorPrice')
     fundamentals = fundamentals.merge(mean_price_by_sector_year, on=['sector', 'year'])
 
-    # Nos quedamos con las columnas que nos interesen
+    # Nos quedamos con las columnas con las que fue entrenado el modelo
     columns_required = ['fiscalDateEnding', 'totalAssets', 'commonStock', 'retainedEarnings',
        'totalShareholderEquity', 'incomeTaxExpense', 'netIncome',
        'changeInCashAndCashEquivalents', 'totalLiabilities',
@@ -118,4 +142,10 @@ def preprocess_financial_data(financials: dict):
     ml_data = fundamentals.reindex(columns=columns_required)
     ml_data.replace(to_replace=[np.inf, -np.inf, "None"], value=np.nan, inplace=True)
 
-    return ml_data
+    # Eliminamos aquellas filas que no tengan información sobre 1y_sharePrice y sean anteriores al dia actual
+    current_date = datetime.now()
+    mask = ml_data['1y_sharePrice'].notna() | (ml_data['fiscalDateEnding'] >= current_date)
+    ml_data = ml_data[mask].reset_index(drop=True)
+
+    if need_prices: return ml_data, prices_df
+    else: return ml_data

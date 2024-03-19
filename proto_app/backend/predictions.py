@@ -7,10 +7,13 @@ import numpy     as np
 import matplotlib.pyplot as plt
 import matplotlib.dates  as mdates
 
+import json
+from flask import jsonify
 
-def make_predictions(data: pd.DataFrame):
+def make_predictions(data: pd.DataFrame) -> tuple[list, int]:
     """
-    Función que toma los datos financieros procesados para hacer las predicciones y aportar una calificación en base al retorno esperado
+    Función que toma los datos financieros procesados para hacer las predicciones y aportar una calificación en base al retorno esperado.
+    Devuelve una lista de predicciones realizadas y un número entero que representa la calificación otorgada
     :data: dataframe de datos financieros procesados, se empleará para entrenar más el modelo y realizar las predicciones
     """
     print(f"Realizando predicciones")
@@ -24,7 +27,11 @@ def make_predictions(data: pd.DataFrame):
             X_train = data.iloc[:i+1].drop(['1y_sharePrice'], axis=1)
             original_model.fit(X_train, y_train)
             # Prediccion
-            X_next = data.iloc[[i+1]].drop(['1y_sharePrice'], axis=1)
+            try:
+                X_next = data.iloc[[i+1]].drop(['1y_sharePrice'], axis=1)
+            except IndexError:
+                print(f"Datos insuficientes para predicción")
+                return predictions, -1
             y_pred = model.predict(X_next) 
             predictions.append(float(y_pred.item()))
         else:
@@ -35,22 +42,23 @@ def make_predictions(data: pd.DataFrame):
             for pred in list(y_pred):
                 predictions.append(float(pred.item()))
             break
-
+    
+    # Generacion de la calificacion
     pct_return = (predictions[-1] - data["sharePrice"].iloc[-1]) / predictions[-1]
-    if pct_return < 0:
+    if pct_return < -5:
         calification = 1
-    elif pct_return < 5:
+    elif pct_return < 0:
         calification = 2
-    elif pct_return < 10:
+    elif pct_return < 5:
         calification = 3
-    elif pct_return < 15:
+    elif pct_return < 10:
         calification = 4;
     else:
         calification = 5
 
     return predictions, calification
 
-def plot_data(ml_data: pd.DataFrame, predictions: list):
+def plot_data(ml_data: pd.DataFrame, predictions: list) -> int:
     """
     Función empleada para plottear el python los resultados comparados reales vs predichos
     :ml_data: dataframe con datos reales
@@ -84,15 +92,28 @@ def plot_data(ml_data: pd.DataFrame, predictions: list):
     return 0
 
 if __name__ == '__main__':
-    for ticker in ['22UA']:
-        # Obtenemos los datos
-        diccionario = download_financial_data(ticker)
-        if type(diccionario) == KeyError:
-            print(diccionario.args[0])
-            break
-        data = preprocess_financial_data(diccionario)
+    for ticker in ['UBER']:
+        # Obtener los datos financieros
+        fundamentals = download_financial_data(ticker)
+
+        # Hacer la predicción y calificación
+        data = preprocess_financial_data(fundamentals)
         # Hacemos predicciones
-        predictions_df, calification = make_predictions(data)
-        print(calification)
-        plot_data(data, predictions_df)
-    
+        predictions, calification = make_predictions(data)
+        # Trasnsformar la lista de predicciones y los precios de data a diccionario
+        predictions_df = pd.DataFrame(predictions, columns=['predicted_1y_sharePrice'])
+        predictions_df['fiscalDateEnding'] = data['fiscalDateEnding'] 
+        predictions_df['fiscalDateEnding'] = predictions_df['fiscalDateEnding'].dt.strftime('%Y-%m-%d')
+        predictions_dict = dict(zip(predictions_df['fiscalDateEnding'], predictions_df['predicted_1y_sharePrice']))
+        data['fiscalDateEnding'] = data['fiscalDateEnding'].dt.strftime('%Y-%m-%d')
+        fundamentals['TIME_SERIES_MONTHLY_ADJUSTED'] = dict(zip(data['fiscalDateEnding'], data['sharePrice']))
+        # Preparar la respuesta
+        respuesta = {
+            'datos_financieros': fundamentals,
+            'prediccion': predictions_dict,
+            'calificacion': calification
+        }
+
+        with open('convert.json', 'w') as convert_file: 
+            convert_file.write(json.dumps(predictions_dict))
+

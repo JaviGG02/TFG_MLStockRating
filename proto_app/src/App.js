@@ -1,25 +1,32 @@
+// Importando librerías y paquetes
 import React, { useState, useEffect } from 'react';
-import BuscadorTicker from './components/BuscadorTicker';
-import OverviewComponent from './components/OverviewComponent';
-import PricePredictionChart from './components/PricePredictionChart';
-import FinancialTable from './components/FinancialTable';
 
-import './styles.css';
+// Importando componentes
+import BuscadorTicker from './components/BuscadorTicker/BuscadorTicker';
+import OverviewComponent from './components/OverviewComponent/OverviewComponent';
+import PricePredictionChart from './components/PricePredictionChart/PricePredictionChart';
+import FinancialTable from './components/FinancialTable/FinancialTable';
+
+// Importando estilos
+import './components/BuscadorTicker/BuscadorTicker.css'
+import './components/FinancialTable/FinancialTable.css'
+import './components/OverviewComponent/OverviewComponent.css';
+import './App.css';
 
 function App() {
-  // Usamos un solo objeto de estado para manejar todos los datos
+  
   const [data, setData] = useState({
-    cargando: true, // Nuevo estado para manejar la carga
+    cargando: true,
     datosFinancieros: null,
     predicciones: null,
     calificacion: null,
+    mensajeError: ''
   });
 
-  useEffect(() => {
-    console.log('Datos actualizados:', data);
-  }, [data]);
+  useEffect(() => {}, [data]);
 
   const buscarTicker = (ticker) => {
+  
     fetch('http://localhost:5000/api/datos', {
       method: 'POST',
       headers: {
@@ -29,16 +36,25 @@ function App() {
     })
     .then(response => response.json())
     .then(responseData => {
-      setData({
-        cargando: false, // Actualizamos el estado de carga
-        datosFinancieros: responseData.datos_financieros, 
-        predicciones: responseData.prediccion, 
-        calificacion: responseData.calificacion,
-      }); 
+      if (!responseData.Error) { 
+        setData({ // No error
+          cargando: false,
+          datosFinancieros: responseData.datos_financieros, 
+          predicciones: responseData.prediccion, 
+          calificacion: responseData.calificacion,
+        }); 
+      }
+      else { // Error en backend
+        setData({
+          cargando: false, 
+          mensajeError: responseData.Error
+        });
+      }
+      
     })
-    .catch(error => {
+    .catch(error => { // Error en frontend o backend
       console.error('Error:', error);
-      setData({ ...data, cargando: false }); // Actualizamos solo el estado de carga
+      setData({ ...data, cargando: false, mensajeError: 'An error occured while loading the data'}); 
     });
   };
 
@@ -68,7 +84,7 @@ function App() {
               </div>
             </>
           ) : (
-            <p>Cargando datos...</p>
+            <p className='error-message'>Error: {data.mensajeError}</p>
           )}
         </>
       )}

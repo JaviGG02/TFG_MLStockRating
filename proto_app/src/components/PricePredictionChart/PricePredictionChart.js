@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -6,25 +6,19 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 
 
-
+// Funcion para el renderizado del grafico de precios y predicciones
 const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
 
   if (!datosFinancieros || !predicciones) {
-    return <p>Cargando datos...</p>; // O cualquier otro marcador de posición o lógica que prefieras
+    return <p>Cargando datos...</p>;
   }
 
-  // Extraer las fechas y precios reales
   const fechasReales = datosFinancieros ? Object.keys(datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED) : [];
-  const preciosReales = datosFinancieros ? Object.values(datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED) : [];
-
-  // Extraer las fechas y precios de las predicciones
   const fechasPredicciones = predicciones ? Object.keys(predicciones) : [];
-  const preciosPredicciones = predicciones ? Object.values(predicciones) : [];
-
   const fechasUnificadas = [...new Set([...fechasReales, ...fechasPredicciones])].sort();
   const preciosRealesRellenados = fechasUnificadas.map(fecha => fechasReales.includes(fecha) ? datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED[fecha] : null);
   const preciosPrediccionesRellenados = fechasUnificadas.map(fecha => fechasPredicciones.includes(fecha) ? predicciones[fecha] : null);
-  
+
   const data = {
   labels: fechasUnificadas,
   datasets: [
@@ -49,21 +43,30 @@ const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
         type: 'time',
         time: {
           unit: 'month',
+          min: fechasUnificadas[0],
+          max: fechasUnificadas[fechasUnificadas.length - 1],
+          tooltipFormat: 'MMM yyyy',
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Precio:' + datosFinancieros.OVERVIEW.Currency,
         },
       },
     },
     elements: {
       line: {
-        tension: 0.4, // Habilita líneas curvas
-        spanGaps: true, // Esto hará que las líneas se unan, ignorando los 'null'
+        tension: 0.4,
+        spanGaps: true,
       },
       point: {
-        radius: 2, // Tamaño de los puntos
+        radius: 2,
       },
     },
   };
 
   return <Line data={data} options={options} />;
-};
+}
 
 export default PricePredictionChart;
