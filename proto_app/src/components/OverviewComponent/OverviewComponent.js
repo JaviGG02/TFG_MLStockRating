@@ -2,7 +2,7 @@
 function OverviewComponent({ overview,  calificacion}) {
 
   let component;
-  if (calificacion != "None") {
+  if (calificacion !== "None") {
     component = <p className="sector"><strong>Calification:</strong> {calificacion}/5</p>
   } else {
     component = <p className="sector"><strong>Calification:</strong> Due to lack of data, a rating cannot be computed</p>
