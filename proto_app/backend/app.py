@@ -27,6 +27,8 @@ def obtener_datos():
     data_manager.preprocess_financial_data()
     # Hacer las predicciones
     data_manager.make_predictions()
+    # Calcular nota
+    data_manager.calculate_rating()
     # Preparar la respuesta
     data_manager.prepare_response()
 

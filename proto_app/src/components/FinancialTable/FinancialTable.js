@@ -62,7 +62,7 @@ const FinancialTable = ({ incomeStatement, balanceSheet, cashFlows }) => {
         // { key: "paymentsForRepurchaseOfCommonStock", name: "Payments for Repurchase of Common Stock" },
         // { key: "paymentsForRepurchaseOfEquity", name: "Payments for Repurchase of Equity" },
         { key: "cashflowFromFinancing", name: "Cash Flow from Financing" },
-        { key: "changeInCashAndCashEquivalents", name: "Change in Cash and Cash Equivalents" }
+        // { key: "changeInCashAndCashEquivalents", name: "Change in Cash and Cash Equivalents" }
     ];
   
     // Función para renderizar los datos de cada informe

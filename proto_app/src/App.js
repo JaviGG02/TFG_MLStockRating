@@ -23,7 +23,9 @@ function App() {
     mensajeError: ''
   });
 
-  useEffect(() => {}, [data]);
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
 
   const buscarTicker = (ticker) => {
   

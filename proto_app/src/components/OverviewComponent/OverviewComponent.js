@@ -1,9 +1,15 @@
+import RatingDetails from '../RatingDetails/RatingDetails';
+
 // Funcion para el renderizado del overview de la empresa
 function OverviewComponent({ overview,  calificacion}) {
 
   let component;
   if (calificacion !== "None") {
-    component = <p className="sector"><strong>Calification:</strong> {calificacion}/5</p>
+    component = 
+    <div className="calification-div">
+      <p className="sector"><strong>Calification:</strong> {calificacion.finalRate}/100</p> 
+      <RatingDetails ratingDetails={calificacion} />
+    </div>
   } else {
     component = <p className="sector"><strong>Calification:</strong> Due to lack of data, a rating cannot be computed</p>
   }
