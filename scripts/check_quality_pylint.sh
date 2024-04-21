@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_DIRECTORY="../proto_app/backend/"
+TARGET_DIRECTORY="./proto_app/backend/"
 
 PYLINT_OUTPUT=$(pylint $TARGET_DIRECTORY)
 EXIT_CODE=$?

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directorio que deseas verificar
-TARGET_DIRECTORY="../proto_app/backend/"
+TARGET_DIRECTORY="./proto_app/backend/"
 
 flake8 --max-line-length=200 $TARGET_DIRECTORY
 
