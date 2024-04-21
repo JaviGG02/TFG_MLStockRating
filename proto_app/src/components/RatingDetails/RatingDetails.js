@@ -8,7 +8,7 @@ const attributeDescriptions = {
                     A value of 100 indicates that the company is equally or mostly financed by shareholders rather than by creditors (D/E <= 1). \
                     A negative value indicates that the company has negative equity, which indicates that it has more liabilities than \
                     assets, which should be seen as a high risk flag. (D/E < 0)",
-  quickRatio: "QR: Measure of a company's ability to meet its short-term obligations with its most liquid assets.\
+  currentRatio: "QR: Measure of a company's ability to meet its short-term obligations with its most liquid assets.\
                A value of 100 indicates that the company is able to pay all its current liabilities with their current assets (QR >= 1).\
                A negative value indicates that the company would have problems repaying its debts (QR < 0).",
   dividendPayout: "Indicates how much the dividend payout has increased in overall quarter to quarter during the last 5 years. \

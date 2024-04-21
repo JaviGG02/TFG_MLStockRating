@@ -1,3 +1,7 @@
+"""
+Modulo encargado de habilitar y gestionar las llamadas al backend
+"""
+
 # Flask
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -9,18 +13,19 @@ from data_manager import DataManager
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/api/datos', methods=['POST'])
+
+@app.route("/api/datos", methods=["POST"])
 def obtener_datos():
     """
     Función para la gestión de las llamadas a backend desde el frontend.
     """
 
     contenido = request.json
-    data_manager = DataManager(contenido['ticker'])
+    data_manager = DataManager(contenido["ticker"])
 
     # Obtener los datos financieros
     fundamentals = data_manager.download_financial_data()
-    if 'Error' in fundamentals.keys():
+    if "Error" in fundamentals:
         return jsonify(fundamentals), 200
 
     # Preparar los datos
@@ -32,7 +37,8 @@ def obtener_datos():
     # Preparar la respuesta
     data_manager.prepare_response()
 
-    return jsonify(data_manager._respuesta), 200
+    return jsonify(data_manager.respuesta), 200
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)
