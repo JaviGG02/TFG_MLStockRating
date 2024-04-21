@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - Code_Formating
   pull_request:
     branches:
       - main
+      - Code_Formating
 
 jobs:
   configure-dependencies:
