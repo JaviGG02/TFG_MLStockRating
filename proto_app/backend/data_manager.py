@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Union
 from datetime import datetime, timedelta
 import json
+import os
 import time
 from pathlib import Path
 import requests
@@ -31,10 +32,14 @@ FINANCIAL_DATA_ATTRIBUTES: tuple = (
 )
 FUNDAMENTAL_ATTRIBUTES: tuple = ("INCOME_STATEMENT", "BALANCE_SHEET", "CASH_FLOW")
 CONFIG_PATH = str(Path(__file__).resolve().parents[0]) + "/config.json"
-MODEL_PATH = str(Path(__file__).resolve().parents[0]) + "/gb_model.joblib"
-with open(CONFIG_PATH, "r", encoding="utf-8") as file:
-    config = json.load(file)
+if os.path.exists(CONFIG_PATH):
+    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
+        config = json.load(file)
+else:
+    api_key = os.getenv("API_KEY")
+    config = {"Alphavantage_key": api_key}
 # Modelo ML
+MODEL_PATH = str(Path(__file__).resolve().parents[0]) + "/gb_model.joblib"
 model = load(MODEL_PATH)
 
 
