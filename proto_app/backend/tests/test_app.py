@@ -1,4 +1,4 @@
-# pylint: disable=C0413,E0401,W0621
+# pylint: disable=C0413,E0401,E0402,W0621
 """
 Bateria de pruebas para el backend de la app
 """

@@ -1,7 +1,7 @@
 """
 Bateria de pruebas para el modulo de data_manager del backend
 """
-# pylint: disable=C0413,E0401,W0621
+# pylint: disable=C0413,E0401,E0402,W0621
 import sys
 from pathlib import Path
 
