@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pytest -W ignore::DeprecationWarning ./proto_app/backend/tests
+PYTHONPATH=./proto_app/backend pytest -W ignore::DeprecationWarning ./proto_app/tests
 
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
