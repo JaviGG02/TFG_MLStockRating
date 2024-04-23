@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - Code_Formating
+      - Code_Testing
   pull_request:
     branches:
       - main
