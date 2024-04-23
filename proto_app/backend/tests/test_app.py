@@ -1,13 +1,13 @@
-# pylint: disable=C0413,E0401,E0402,W0621
 """
 Bateria de pruebas para el backend de la app
 """
+# pylint: disable=C0413,E0401,E0402,W0621
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-import pytest
-from flask import json
-from app import app
+import pytest  # pylint: disable=E0402
+from flask import json  # pylint: disable=E0402
+from app import app  # pylint: disable=E0402
 
 
 @pytest.fixture
