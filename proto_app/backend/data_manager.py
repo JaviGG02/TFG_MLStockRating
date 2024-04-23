@@ -1,6 +1,7 @@
 """
 Modulo encargado de la gestion de la clase DataManager
 """
+
 # pylint: disable=E0401
 from dataclasses import dataclass, field
 from typing import Union
@@ -454,14 +455,10 @@ class DataManager:
         )
         predictions_df["fiscalDateEnding"] = self.__ml_data[
             "fiscalDateEnding"
-        ] + timedelta(
-            days=365
-        )
+        ] + timedelta(days=365)
         predictions_df["fiscalDateEnding"] = predictions_df[
             "fiscalDateEnding"
-        ].dt.strftime(
-            "%Y-%m"
-        )
+        ].dt.strftime("%Y-%m")
         self.__predictions_data = dict(
             zip(
                 predictions_df["fiscalDateEnding"],

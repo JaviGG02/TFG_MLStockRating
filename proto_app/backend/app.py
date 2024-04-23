@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 # Gestion de funciones
-from data_manager import DataManager # pylint: disable=E0401
+from data_manager import DataManager  # pylint: disable=E0401
 
 # Flask App
 app = Flask(__name__)

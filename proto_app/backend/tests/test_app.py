@@ -1,24 +1,26 @@
 """
 Bateria de pruebas para el backend de la app
 """
+
 # pylint: disable=C0413,E0401,E0402,W0621
 import pytest
 from flask import json
 from app import app
+
 
 @pytest.fixture
 def client():
     """
     Metodo para la gestion de los tests a la app
     """
-    app.config['TESTING'] = True
+    app.config["TESTING"] = True
     with app.test_client() as client:
         yield client
 
 
 def test_api_ticker_valido(client):
     """
-    Test ID: TU-0
+    Test ID: TU-APP-01
     Covered Requirement: RF-06: Peticiones satisfactorias al backend
 
     Este test verifica que el sistema es capaz de hacer peticiones al backend
@@ -54,7 +56,7 @@ def test_api_ticker_valido(client):
 
 def test_api_ticker_invalido(client):
     """
-    Test ID: TU-0
+    Test ID: TU-APP-02
     Covered Requirement: RF-07: Manejo de tickers inválidos
 
     Este test verifica que el sistema maneja correctamente los casos en que se
