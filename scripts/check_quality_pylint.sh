@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_FILES="./proto_app/backend/*.py"
+TARGET_FILES="./proto_app/backend/app.py ./proto_app/backend/data_manager.py ./proto_app/backend/data_manager_aux.py"
 
 PYLINT_OUTPUT=$(pylint $TARGET_FILES)
 EXIT_CODE=$?
