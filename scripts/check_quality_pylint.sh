@@ -1,8 +1,8 @@
 #!/bin/bash
 
-TARGET_DIRECTORY="./proto_app/backend/"
+TARGET_FILES="./proto_app/backend/*.py"
 
-PYLINT_OUTPUT=$(pylint $TARGET_DIRECTORY --ignore=./proto_app/backend/tests)
+PYLINT_OUTPUT=$(pylint $TARGET_FILES)
 EXIT_CODE=$?
 
 # Parsear la puntuación de salida de pylint
