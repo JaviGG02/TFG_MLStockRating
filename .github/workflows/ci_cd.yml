@@ -26,8 +26,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip  # Actualizar pip
-        pip install -r requirements.txt
-        pip install jsonschema Flask requests
 
   code-formatting:
     needs: configure-dependencies
@@ -57,7 +55,8 @@ jobs:
       run: chmod +x ./scripts/run_tests.sh
     - name: Install test dependencies
       run: |
-        pip install pytest flask jsonschema pydantic
+        pip install pytest flask
+        pip install -r requirements.txt
     - name: Run tests
       run: |
         ./scripts/run_tests.sh
@@ -69,6 +68,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set executable permissions for scripts
       run: chmod +x ./scripts/check_quality_radon.sh ./scripts/check_quality_bandit.sh
+    - name: Install test dependencies
+      run: |
+        pip install pytest flask
+        pip install -r requirements.txt
     - name: Install other test tools
       run: |
         pip install radon bandit
