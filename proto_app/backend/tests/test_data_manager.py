@@ -4,10 +4,9 @@ Bateria de pruebas para el modulo de data_manager del backend
 # pylint: disable=C0413,E0401,E0402,W0621
 import sys
 from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parents[1])) # pylint: disable=E0402
-from data_manager import DataManager  # pylint: disable=E0402
-import pytest  # pylint: disable=E0402
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+from data_manager import DataManager
+import pytest
 
 
 @pytest.fixture

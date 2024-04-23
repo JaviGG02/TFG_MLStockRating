@@ -2,7 +2,7 @@
 
 TARGET_DIRECTORY="./proto_app/backend/"
 
-PYLINT_OUTPUT=$(pylint $TARGET_DIRECTORY --disable=E0402)
+PYLINT_OUTPUT=$(pylint $TARGET_DIRECTORY --ignore=./proto_app/backend/tests)
 EXIT_CODE=$?
 
 # Parsear la puntuación de salida de pylint

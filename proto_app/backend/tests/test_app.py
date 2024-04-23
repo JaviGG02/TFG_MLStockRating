@@ -5,10 +5,9 @@ Bateria de pruebas para el backend de la app
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-import pytest  # pylint: disable=E0402
-from flask import json  # pylint: disable=E0402
-from app import app  # pylint: disable=E0402
-
+import pytest
+from flask import json
+from app import app
 
 @pytest.fixture
 def client():
