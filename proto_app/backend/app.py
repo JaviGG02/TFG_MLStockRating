@@ -1,5 +1,5 @@
 """
-Modulo encargado de habilitar y gestionar las llamadas al backend
+Modulo API encargado de habilitar y gestionar las llamadas al backend.
 """
 
 # Flask
@@ -41,4 +41,4 @@ def obtener_datos():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

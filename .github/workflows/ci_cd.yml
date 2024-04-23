@@ -28,7 +28,7 @@ jobs:
         pip install -r requirements.txt
         pip install jsonschema Flask requests
 
-  code-preparation:
+  code-formatting:
     needs: configure-dependencies
     runs-on: ubuntu-22.04
     steps:
@@ -46,28 +46,29 @@ jobs:
         ./scripts/check_quality_pylint.sh
         ./scripts/check_quality_flake8.sh
 
-  # tests:
-  #   needs: code-preparation
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Install test dependencies
-  #     run: |
-  #       pip install pytest flask jsonschema pydantic coverage
-  #   - name: Run tests
-  #     run: ./scripts/run_tests.sh
-  #   - name: Test coverage
-  #     run: ./scripts/check_test_coverage.sh
+  tests:
+    needs: code-formatting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install test dependencies
+      run: |
+        pip install pytest flask jsonschema pydantic
+    - name: Run tests
+      run: |
+        ./scripts/run_tests.sh
 
-  # other-tests:
-  #   needs: tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Install other test tools
-  #     run: |
-  #       pip install radon bandit
-  #   - name: Other quality checks
-  #     run: |
-  #       ./scripts/check_quality_radon.sh
-  #       ./scripts/check_quality_bandit.sh
+  other-tests:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install other test tools
+      run: |
+        pip install radon bandit
+    - name: Run complexity
+      run: |
+        ./scripts/check_quality_radon.sh
+    - name: Run security checks
+      run: |
+        ./scripts/check_quality_bandit.sh
