@@ -39,7 +39,8 @@ jobs:
     - name: Install code formatting and quality tools
       run: |
         pip install black
-        pip install pylint flake8
+        pip install pylint 
+        pip install flake8
     - name: Code formatting with Black
       run: ./scripts/format_code_black.sh
     - name: Code quality checks
