@@ -35,7 +35,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set executable permissions for scripts
-      run: chmod +x ./scripts/*.sh
+      run: chmod +x ./scripts/format_code_black.sh ./scripts/check_quality_pylint.sh ./scripts/check_quality_flake8.sh
     - name: Install code formatting and quality tools
       run: |
         pip install black
@@ -53,6 +53,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Set executable permissions for scripts
+      run: chmod +x ./scripts/run_tests.sh
     - name: Install test dependencies
       run: |
         pip install pytest flask jsonschema pydantic
@@ -65,6 +67,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Set executable permissions for scripts
+      run: chmod +x ./scripts/check_quality_radon.sh ./scripts/check_quality_bandit.sh
     - name: Install other test tools
       run: |
         pip install radon bandit
