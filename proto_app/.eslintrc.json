@@ -1,17 +1,8 @@
 {
-    "extends": "eslint:recommended",
-    "env": {
-      "browser": true,
-      "es6": true,
-      "node": true
-    },
-    "parserOptions": {
-      "ecmaVersion": 2020,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    },
-    "rules": {}
+  "extends": "eslint:recommended",
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
   }
-  
+}
