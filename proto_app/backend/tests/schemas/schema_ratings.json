@@ -1,36 +1,42 @@
 {
-    "type": "object",
-    "properties": {
-        "growth": {
-            "type": "object",
-            "properties": {
-                "totalRevenue": {"type": "number"},
-                "ebitda": {"type": "number"},
-                "freeCashFlow": {"type": "number"},
-                "dividendPayout": {"type": "number"}
-            },
-            "required": ["totalRevenue", "ebitda", "freeCashFlow", "dividendPayout"]
-        },
-        "profitability": {
-            "type": "object",
-            "properties": {
-                "netIncome": {"type": "number"},
-                "ROE": {"type": "number"},
-                "ROA": {"type": "number"},
-                "bookValue": {"type": "number"}
-            },
-            "required": ["netIncome", "ROE", "ROA", "bookValue"]
-        },
-        "financialHealth": {
-            "type": "object",
-            "properties": {
-                "currentRatio": {"type": "number"},
-                "debtEquityRatio": {"type": "number"}
-            },
-            "required": ["currentRatio", "debtEquityRatio"]
-        },
-        "pricePredictionReturn": {"type": "number"},
-        "finalRate": {"type": "number"}
+  "type": "object",
+  "properties": {
+    "growth": {
+      "type": "object",
+      "properties": {
+        "totalRevenue": { "type": "number" },
+        "ebitda": { "type": "number" },
+        "freeCashFlow": { "type": "number" },
+        "dividendPayout": { "type": "number" }
+      },
+      "required": ["totalRevenue", "ebitda", "freeCashFlow", "dividendPayout"]
     },
-    "required": ["growth", "profitability", "financialHealth", "pricePredictionReturn", "finalRate"]
+    "profitability": {
+      "type": "object",
+      "properties": {
+        "netIncome": { "type": "number" },
+        "ROE": { "type": "number" },
+        "ROA": { "type": "number" },
+        "bookValue": { "type": "number" }
+      },
+      "required": ["netIncome", "ROE", "ROA", "bookValue"]
+    },
+    "financialHealth": {
+      "type": "object",
+      "properties": {
+        "currentRatio": { "type": "number" },
+        "debtEquityRatio": { "type": "number" }
+      },
+      "required": ["currentRatio", "debtEquityRatio"]
+    },
+    "pricePredictionReturn": { "type": "number" },
+    "finalRate": { "type": "number" }
+  },
+  "required": [
+    "growth",
+    "profitability",
+    "financialHealth",
+    "pricePredictionReturn",
+    "finalRate"
+  ]
 }

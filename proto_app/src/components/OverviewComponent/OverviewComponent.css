@@ -1,54 +1,53 @@
 /* overviewComponent.css */
 .container {
-    max-width: 960px; 
-    margin: auto; 
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+  max-width: 960px;
+  margin: auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  
-  .ticker {
-    font-size: 2em;
-    color: #2c3e50;
-  }
-  
-  .description {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .description_text {
-    font-size: 1em;
-    color: #34495e;
-    flex: 3; 
-    margin-right: 20px;
-    text-align: justify;
-  }
+.ticker {
+  font-size: 2em;
+  color: #2c3e50;
+}
 
-  .sector {
-    color: #2c3e50;
-    font-size: 1.2em;
-    margin-top: 1em; 
-  }
+.description {
+  display: flex;
+  justify-content: space-between;
+}
 
-  .ratios-div {
-    flex: 1.25; 
-    padding: 20px;
-    margin: 0;
-    margin-top: 7%;
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 1em;
-    height: 70%;
-  }
-  
-  .ratio {
-    margin-bottom: 10px;
-  }
-  
-  .ratio strong {
-    display: inline; 
-    color: #2c3e50;
-    margin-bottom: 5px;
-  }
+.description_text {
+  font-size: 1em;
+  color: #34495e;
+  flex: 3;
+  margin-right: 20px;
+  text-align: justify;
+}
+
+.sector {
+  color: #2c3e50;
+  font-size: 1.2em;
+  margin-top: 1em;
+}
+
+.ratios-div {
+  flex: 1.25;
+  padding: 20px;
+  margin: 0;
+  margin-top: 7%;
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1em;
+  height: 70%;
+}
+
+.ratio {
+  margin-bottom: 10px;
+}
+
+.ratio strong {
+  display: inline;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}

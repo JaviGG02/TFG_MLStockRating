@@ -1,5 +1,5 @@
 /* app.css */
-.root-div{
+.root-div {
   max-width: 100%;
 }
 .page-container {
@@ -10,7 +10,7 @@
 
 .graph-container {
   width: 100%;
-  max-width: 80vw; 
+  max-width: 80vw;
   margin: 20px auto;
 }
 

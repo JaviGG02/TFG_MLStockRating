@@ -1,78 +1,89 @@
 {
-    "type": "object",
-    "properties": {
-        "TIME_SERIES_MONTHLY_ADJUSTED": {
-            "type": "object",
-            "properties": {
-                "Meta Data": {
-                    "type": "object",
-                    "properties": {
-                        "1. Information": {"type": "string"},
-                        "2. Symbol": {"type": "string"},
-                        "3. Last Refreshed": {"type": "string"},
-                        "4. Time Zone": {"type": "string"}
-                    },
-                    "required": ["1. Information", "2. Symbol", "3. Last Refreshed", "4. Time Zone"]
-                },
-                "Monthly Adjusted Time Series": {
-                    "type": "object",
-                    "patternProperties": {
-                        "^[0-9]{4}-[0-9]{2}-[0-9]{2}$": {
-                            "type": "object",
-                            "properties": {
-                                "1. open": {"type": "string"},
-                                "2. high": {"type": "string"},
-                                "3. low": {"type": "string"},
-                                "4. close": {"type": "string"},
-                                "5. adjusted close": {"type": "string"},
-                                "6. volume": {"type": "string"},
-                                "7. dividend amount": {"type": "string"}
-                            },
-                            "required": ["5. adjusted close"]
-                        }
-                    }
-                }
-            },
-            "required": ["Meta Data", "Monthly Adjusted Time Series"]
+  "type": "object",
+  "properties": {
+    "TIME_SERIES_MONTHLY_ADJUSTED": {
+      "type": "object",
+      "properties": {
+        "Meta Data": {
+          "type": "object",
+          "properties": {
+            "1. Information": { "type": "string" },
+            "2. Symbol": { "type": "string" },
+            "3. Last Refreshed": { "type": "string" },
+            "4. Time Zone": { "type": "string" }
+          },
+          "required": [
+            "1. Information",
+            "2. Symbol",
+            "3. Last Refreshed",
+            "4. Time Zone"
+          ]
         },
-        "INCOME_STATEMENT": {
-            "type": "object",
-            "properties": {
-                "symbol": {"type": "string"},
-                "annualReports": {"type": "array"},
-                "quarterlyReports": {"type": "array"}
-            },
-            "required": ["symbol", "annualReports", "quarterlyReports"]
-        },
-        "BALANCE_SHEET": {
-            "type": "object",
-            "properties": {
-                "symbol": {"type": "string"},
-                "annualReports": {"type": "array"},
-                "quarterlyReports": {"type": "array"}
-            },
-            "required": ["symbol", "annualReports", "quarterlyReports"]
-        },
-        "CASH_FLOW": {
-            "type": "object",
-            "properties": {
-                "symbol": {"type": "string"},
-                "annualReports": {"type": "array"},
-                "quarterlyReports": {"type": "array"}
-            },
-            "required": ["symbol", "annualReports", "quarterlyReports"]
-        },
-        "OVERVIEW": {
-            "type": "object",
-            "properties": {
-                "Symbol": {"type": "string"},
-                "Name": {"type": "string"},
-                "Description": {"type": "string"},
-                "Currency": {"type": "string"},
-                "Sector": {"sector": "string"}
-            },
-            "required": ["Symbol", "Name", "Description", "Currency", "Sector"]
+        "Monthly Adjusted Time Series": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]{4}-[0-9]{2}-[0-9]{2}$": {
+              "type": "object",
+              "properties": {
+                "1. open": { "type": "string" },
+                "2. high": { "type": "string" },
+                "3. low": { "type": "string" },
+                "4. close": { "type": "string" },
+                "5. adjusted close": { "type": "string" },
+                "6. volume": { "type": "string" },
+                "7. dividend amount": { "type": "string" }
+              },
+              "required": ["5. adjusted close"]
+            }
+          }
         }
+      },
+      "required": ["Meta Data", "Monthly Adjusted Time Series"]
     },
-    "required": ["TIME_SERIES_MONTHLY_ADJUSTED", "INCOME_STATEMENT", "BALANCE_SHEET", "CASH_FLOW", "OVERVIEW"]
+    "INCOME_STATEMENT": {
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string" },
+        "annualReports": { "type": "array" },
+        "quarterlyReports": { "type": "array" }
+      },
+      "required": ["symbol", "annualReports", "quarterlyReports"]
+    },
+    "BALANCE_SHEET": {
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string" },
+        "annualReports": { "type": "array" },
+        "quarterlyReports": { "type": "array" }
+      },
+      "required": ["symbol", "annualReports", "quarterlyReports"]
+    },
+    "CASH_FLOW": {
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string" },
+        "annualReports": { "type": "array" },
+        "quarterlyReports": { "type": "array" }
+      },
+      "required": ["symbol", "annualReports", "quarterlyReports"]
+    },
+    "OVERVIEW": {
+      "type": "object",
+      "properties": {
+        "Symbol": { "type": "string" },
+        "Name": { "type": "string" },
+        "Description": { "type": "string" },
+        "Currency": { "type": "string" },
+        "Sector": { "sector": "string" }
+      },
+      "required": ["Symbol", "Name", "Description", "Currency", "Sector"]
+    }
+  },
+  "required": [
+    "TIME_SERIES_MONTHLY_ADJUSTED",
+    "INCOME_STATEMENT",
+    "BALANCE_SHEET",
+    "CASH_FLOW",
+    "OVERVIEW"
+  ]
 }

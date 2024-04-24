@@ -1,133 +1,133 @@
 /* ESTILOS BUSQUEDA */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #A2E1D4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-x: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #a2e1d4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+form {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 15rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.search_box {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  align-items: center;
+  top: 50rem;
+  width: 35rem;
+  height: 5rem;
+}
+
+.ticker_input[type="text"] {
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: none;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid #ccc;
+  width: 80%;
+  transition: border-color 0.3s;
+  text-align: center;
+  align-items: center;
+}
+
+.ticker_input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: #66bfbf;
+}
+
+.search_button {
+  font-size: 1rem;
+  color: #fff;
+  background-color: #66bfbf;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search_button:hover {
+  background-color: #558a8e;
+}
+
+.ticker-display-wrapper {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 15rem;
+  width: 35rem;
+  height: 7rem;
+}
+
+.ticker-display-title {
+  font-size: 2em;
+  color: #2c3e50;
+  margin: 10px;
+}
+
+.error-message {
+  color: #2c3e50;
+  background-color: #ffffffcc;
+  font-size: 1.5rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: calc(100% - 40px);
+  box-sizing: border-box;
+}
+
+/* ANIMACION BUSQUEDA */
+@keyframes rotateBorder {
+  0% {
+    border-color: #66bfbf transparent transparent transparent;
   }
-  
-  form {
-    background: #fff;
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    top: 15rem;
+  25% {
+    border-color: transparent #66bfbf transparent transparent;
   }
-  
-  .hidden{
-    display: none;
+  50% {
+    border-color: transparent transparent #66bfbf transparent;
   }
-  
-  .search_box {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-    text-align: center;
-    align-items: center;
-    top: 50rem;
-    width: 35rem;
-    height: 5rem;
+  75% {
+    border-color: transparent transparent transparent #66bfbf;
   }
-  
-  .ticker_input[type="text"] {
-    font-size: 1rem;
-    padding: 0.5rem;
-    border: none;
-    margin-bottom: 1rem;
-    border-bottom: 3px solid #ccc;
-    width: 80%;
-    transition: border-color 0.3s;
-    text-align: center;
-    align-items: center;
+  100% {
+    border-color: #66bfbf transparent transparent transparent;
   }
-  
-  .ticker_input[type="text"]:focus {
-    outline: none;
-    border-bottom-color: #66bfbf;
-  }
-  
-  .search_button {
-    font-size: 1rem;
-    color: #fff;
-    background-color: #66bfbf; 
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .search_button:hover {
-    background-color: #558a8e; 
-  }
-  
-  .ticker-display-wrapper{
-    background: #fff;
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    top: 15rem;
-    width: 35rem;
-    height: 7rem;
-  }
-  
-  .ticker-display-title{
-    font-size: 2em;
-    color: #2c3e50;
-    margin: 10px;
-  }
-  
-  .error-message {
-    color: #2c3e50; 
-    background-color: #ffffffcc;
-    font-size: 1.5rem; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    position: fixed; 
-    top: 50%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 2rem; 
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    text-align: center; 
-    max-width: calc(100% - 40px); 
-    box-sizing: border-box;
-  }
-  
-  /* ANIMACION BUSQUEDA */
-  @keyframes rotateBorder {
-      0% {
-          border-color: #66bfbf transparent transparent transparent;
-      }
-      25% {
-          border-color: transparent #66bfbf transparent transparent;
-      }
-      50% {
-          border-color: transparent transparent #66bfbf transparent;
-      }
-      75% {
-          border-color: transparent transparent transparent #66bfbf;
-      }
-      100% {
-          border-color: #66bfbf transparent transparent transparent;
-      }
-  }
-  
-  .loading {
-      border: 10px solid transparent;
-      border-radius: 1rem;
-      position: relative;
-      animation: rotateBorder 1.5s linear infinite;
-  }
+}
+
+.loading {
+  border: 10px solid transparent;
+  border-radius: 1rem;
+  position: relative;
+  animation: rotateBorder 1.5s linear infinite;
+}
