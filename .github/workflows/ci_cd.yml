@@ -85,6 +85,7 @@ jobs:
         node-version: '18'
     - name: Install frontend dependencies
       run: |
+        cd proto_app
         npm install
         npm install --save-dev prettier
         npm install --save-dev eslint eslint-config-react
