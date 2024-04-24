@@ -3,9 +3,13 @@ Bateria de pruebas para el backend de la app
 """
 
 # pylint: disable=C0413,E0401,E0402,W0621
+import json
+import pathlib
 import pytest
 from flask import json
 from app import app
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 
 
 @pytest.fixture
@@ -17,11 +21,23 @@ def client():
     with app.test_client() as client:
         yield client
 
+def validate_payload(payload, schema_name):
+    """
+    Funcion auxiliar para validar el esquema de un objeto
+    """
+    schemas_dir = str(f"{pathlib.Path(__file__).parent.absolute()}/schemas")
+    schema = json.loads(
+        pathlib.Path(f"{schemas_dir}/{schema_name}").read_text(encoding="utf-8")
+    )
+    try:
+        return validate(payload, schema)
+    except ValidationError as e:
+        return pytest.fail(f"Esquema JSON incorrecto: {e.message}")
 
 def test_api_ticker_valido(client):
     """
     Test ID: TU-APP-01
-    Covered Requirement: RF-06: Peticiones satisfactorias al backend
+    Covered Requirement: RF-08: Peticiones satisfactorias al backend
 
     Este test verifica que el sistema es capaz de hacer peticiones al backend
     para una acción dada, asegurando que se llevan a cabo los procesos de
@@ -35,12 +51,6 @@ def test_api_ticker_valido(client):
     Salida Esperada: El sistema debe devolver un JSON con la estructura correcta y completa,
     incluyendo los datos financieros, la calificacion y la prediccion computadas.
     """
-    financial_data_attributes = [
-        "datos_financieros",
-        "calificacion",
-        "prediccion",
-    ]
-
     response = client.post(
         "/api/datos",
         data=json.dumps({"ticker": "AAPL"}),
@@ -49,15 +59,15 @@ def test_api_ticker_valido(client):
     assert response.status_code == 200
     data = json.loads(response.data)
 
-    assert "Error" not in data
-    for attribute in financial_data_attributes:
-        assert attribute in data
+    validate_payload(data, "schema_response.json")
 
 
 def test_api_ticker_invalido(client):
     """
     Test ID: TU-APP-02
-    Covered Requirement: RF-07: Manejo de tickers inválidos
+    Covered Requirement: 
+        RF-09: Manejo de tickers inválidos
+        RNF-03: Tratamiento de errores
 
     Este test verifica que el sistema maneja correctamente los casos en que se
     proporciona un ticker inválido, asegurando que se devuelva un mensaje de error
