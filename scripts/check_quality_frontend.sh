@@ -2,7 +2,7 @@
 
 # Ejecutar ESLint para verificar la calidad del código JavaScript/React
 cd proto_app
-npx eslint
+npx eslint .
 
 # Capturar el código de salida de ESLint
 EXIT_CODE=$?
