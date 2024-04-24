@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Ejecutar ESLint para verificar la calidad del código JavaScript/React
-cd proto_app
 npx eslint . --config proto_app/.eslintrc.json
 
 # Capturar el código de salida de ESLint
