@@ -10,8 +10,10 @@ on:
     branches:
       - main
       - Code_Formating
+      - Code_Testing
 
 jobs:
+  # BACKEND PIPELINE
   backend-dependencies:
     runs-on: ubuntu-22.04
     strategy:
@@ -25,7 +27,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip  # Actualizar pip
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
   backend-code-formatting:
     needs: backend-dependencies
@@ -52,11 +55,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set executable permissions for scripts
-      run: chmod +x ./scripts/run_tests.sh
+      run: chmod +x ./scripts/run_tests.sh ./scripts/check_quality_radon.sh ./scripts/check_quality_bandit.sh
     - name: Install test dependencies
       run: |
         pip install pytest flask
-        pip install -r requirements.txt
     - name: Export API Key to Environment
       run: echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
     - name: Run tests
@@ -72,6 +74,7 @@ jobs:
       run: |
         ./scripts/check_quality_bandit.sh
 
+  # FRONTEND PIPELINE
   frontend-dependencies:
     runs-on: ubuntu-latest
     steps:
