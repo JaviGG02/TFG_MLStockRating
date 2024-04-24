@@ -85,7 +85,6 @@ jobs:
         ./scripts/check_quality_bandit.sh
 
   frontend-code-formatting-and-tests:
-    needs: code-formatting
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -100,7 +99,8 @@ jobs:
         npm install --save-dev prettier
         npm install --save-dev eslint eslint-config-react
         npm install --save-dev stylelint stylelint-config-standard
-
+    - name: Set executable permissions for scripts
+      run: chmod +x ./scripts/check_quality_radon.sh ./scripts/check_quality_bandit.sh
     - name: Run formating and quality checks
       run: |
         ./scripts/check_format_frontend.sh
