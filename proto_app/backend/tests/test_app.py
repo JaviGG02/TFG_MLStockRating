@@ -3,7 +3,6 @@ Bateria de pruebas para el backend de la app
 """
 
 # pylint: disable=C0413,E0401,E0402,W0621
-import json
 import pathlib
 import pytest
 from flask import json
