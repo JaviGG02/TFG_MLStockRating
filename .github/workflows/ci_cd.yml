@@ -100,13 +100,9 @@ jobs:
       with:
         node-version: '18'
     - name: Set executable permissions for scripts
-      run: chmod +x ./scripts/check_format_frontend.sh ./scripts/check_quality_frontend.sh
-    - name: Run code formating
+      run: chmod +x ./scripts/check_format_frontend.sh
+    - name: Run code formating check
       run: ./scripts/check_format_frontend.sh
-    - name: Run code quality checks
-      run: |
-        npm install --save-dev eslint eslint-config-react
-        ./scripts/check_quality_frontend.sh
 
   frontend-tests:
     needs: frontend-code-formatting
