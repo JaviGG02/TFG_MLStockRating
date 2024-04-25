@@ -1,18 +1,33 @@
-import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
   if (!datosFinancieros || !predicciones) {
     return <p>Cargando datos...</p>;
   }
 
-  const fechasReales = Object.keys(datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED);
+  const fechasReales = Object.keys(
+    datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED,
+  );
   const fechasPredicciones = Object.keys(predicciones);
-  const fechasUnificadas = [...new Set([...fechasReales, ...fechasPredicciones])].sort();
+  const fechasUnificadas = [
+    ...new Set([...fechasReales, ...fechasPredicciones]),
+  ].sort();
 
   const data = fechasUnificadas.map((fecha) => ({
     fecha,
-    PrecioReal: fechasReales.includes(fecha) ? datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED[fecha] : null,
+    PrecioReal: fechasReales.includes(fecha)
+      ? datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED[fecha]
+      : null,
     Predicción: fechasPredicciones.includes(fecha) ? predicciones[fecha] : null,
   }));
 
@@ -27,8 +42,18 @@ const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="PrecioReal" stroke="#8884d8" dot={{ fill: '#8884d8' }} />
-        <Line type="monotone" dataKey="Predicción" stroke="#ff6347" dot={{ fill: '#ff6347' }} />
+        <Line
+          type="monotone"
+          dataKey="PrecioReal"
+          stroke="#8884d8"
+          dot={{ fill: "#8884d8" }}
+        />
+        <Line
+          type="monotone"
+          dataKey="Predicción"
+          stroke="#ff6347"
+          dot={{ fill: "#ff6347" }}
+        />
       </LineChart>
     </ResponsiveContainer>
   );

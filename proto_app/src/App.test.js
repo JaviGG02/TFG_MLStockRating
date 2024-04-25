@@ -1,4 +1,4 @@
-import ResizeObserver from 'resize-observer-polyfill';
+import ResizeObserver from "resize-observer-polyfill";
 global.ResizeObserver = ResizeObserver;
 import React from "react";
 import { render, screen } from "@testing-library/react";
@@ -10,7 +10,7 @@ describe("PricePredictionChart", () => {
     TIME_SERIES_MONTHLY_ADJUSTED: {
       "2021-01-01": 100,
       "2021-02-01": 105,
-    }
+    },
   };
 
   const mockPredicciones = {
@@ -25,10 +25,10 @@ describe("PricePredictionChart", () => {
 
   test("renderiza el gráfico cuando se proporcionan datos", () => {
     render(
-      <PricePredictionChart 
-        datosFinancieros={mockDatosFinancieros} 
-        predicciones={mockPredicciones} 
-      />
+      <PricePredictionChart
+        datosFinancieros={mockDatosFinancieros}
+        predicciones={mockPredicciones}
+      />,
     );
     // Se displayean las leyendas, por tanto el grafico tambien
     expect(screen.getByText(/PrecioReal/i)).toBeInTheDocument();
