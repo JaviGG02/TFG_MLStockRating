@@ -114,4 +114,7 @@ jobs:
       with:
         node-version: '18'
     - name: Run frontend tests
-      run: npm test 
+      run: |
+        cd proto_app
+        pwd
+        npm test 

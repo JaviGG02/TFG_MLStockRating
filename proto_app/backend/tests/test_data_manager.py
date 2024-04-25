@@ -24,6 +24,7 @@ def data_manager():
     dm.ratings = dm.calculate_rating()
     return dm
 
+
 def validate_payload(payload, schema_name):
     """
     Funcion auxiliar para validar el esquema de un objeto
@@ -48,8 +49,8 @@ def test_recoleccion_datos_historicos(data_manager):
     mensual ajustado, estados financieros y descripción general están presentes en la
     respuesta obtenida.
 
-    Metodología: Se ejecuta la función download_financial_data() del data_manager, simulando 
-    la descarga de datos financieros y se compara con un esquema predefinido con los datos 
+    Metodología: Se ejecuta la función download_financial_data() del data_manager, simulando
+    la descarga de datos financieros y se compara con un esquema predefinido con los datos
     mínimos necesarios.
 
     Salida esperada: La función debe devolver un diccionario que contenga todos los atributos
@@ -144,21 +145,22 @@ def test_generacion_calificaciones_empresas(data_manager):
     """
     validate_payload(data_manager.ratings, "schema_ratings.json")
 
+
 def test_preparar_respuesta(data_manager):
     """
     Test ID: TU-DM-05
     Requisito cubierto: RF-05: Generación de la respuesta del backend
 
-    Este test verifica que el sistema puede tomar los datos financieros, 
-    predicciones y calificación y con ello formar la respuesta que se 
+    Este test verifica que el sistema puede tomar los datos financieros,
+    predicciones y calificación y con ello formar la respuesta que se
     mandará al cliente.
 
     Metodología: Se ejecuta la función prepare_response() del data_manager,
-    la cual debe combinar todos los datos necesarios en la estructura de 
+    la cual debe combinar todos los datos necesarios en la estructura de
     respuesta final.
 
     Salida esperada: La función debe devolver un diccionario que contiene todas las partes
-    necesarias, asegurando que todos los elementos requeridos estén presentes y 
+    necesarias, asegurando que todos los elementos requeridos estén presentes y
     correctamente formateados.
     """
     response = data_manager.prepare_response()

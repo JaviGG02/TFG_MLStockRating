@@ -86,26 +86,31 @@ class DataManager:
 
         print(f"Obteniendo los datos de {self.ticker}")
         # Obtención de fundamentales y precios
-        for element in FINANCIAL_DATA_ATTRIBUTES:
-            print(f"{element} descargado")
-            url = f"https://www.alphavantage.co/query?function={element}&symbol={self.ticker}&apikey={self.__alpha_vantage_key}"  # pylint: disable=C0301
-            r = requests.get(url, timeout=1000)
-            downloaded = r.json()
-            if not downloaded:
-                print(f"Información sobre {self.ticker} no disponible")
-                self.__financial_data = {
-                    "Error": f"Información sobre {self.ticker} no disponible"
-                }
-                break
-            # Caso de superar el limite de acccesos por minuto de la API
-            while "Note" in downloaded:
-                print("Waiting for 20 seconds for AlphaVantage API limit!")
-                time.sleep(20)
+        try:
+            for element in FINANCIAL_DATA_ATTRIBUTES:
+                print(f"{element} descargado")
+                url = f"https://www.alphavantage.co/query?function={element}&symbol={self.ticker}&apikey={self.__alpha_vantage_key}"  # pylint: disable=C0301
                 r = requests.get(url, timeout=1000)
                 downloaded = r.json()
+                if not downloaded:
+                    print(f"Información sobre {self.ticker} no disponible")
+                    self.__financial_data = {
+                        "Error": f"Información sobre {self.ticker} no disponible"
+                    }
+                    break
+                # Caso de superar el limite de acccesos por minuto de la API
+                while "Note" in downloaded:
+                    print("Waiting for 20 seconds for AlphaVantage API limit!")
+                    time.sleep(20)
+                    r = requests.get(url, timeout=1000)
+                    downloaded = r.json()
 
-            self.__financial_data[element] = downloaded
+                self.__financial_data[element] = downloaded
 
+        except requests.exceptions.JSONDecodeError:
+            self.__financial_data = {
+                "Error": f"Información sobre {self.ticker} no disponible"
+            }
         return self.__financial_data
 
     def preprocess_financial_data(self) -> pd.DataFrame:

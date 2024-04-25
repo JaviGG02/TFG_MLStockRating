@@ -20,6 +20,7 @@ def client():
     with app.test_client() as client:
         yield client
 
+
 def validate_payload(payload, schema_name):
     """
     Funcion auxiliar para validar el esquema de un objeto
@@ -32,6 +33,7 @@ def validate_payload(payload, schema_name):
         return validate(payload, schema)
     except ValidationError as e:
         return pytest.fail(f"Esquema JSON incorrecto: {e.message}")
+
 
 def test_api_ticker_valido(client):
     """
@@ -64,7 +66,7 @@ def test_api_ticker_valido(client):
 def test_api_ticker_invalido(client):
     """
     Test ID: TU-APP-02
-    Covered Requirement: 
+    Covered Requirement:
         RF-09: Manejo de tickers inválidos
         RNF-03: Tratamiento de errores
 

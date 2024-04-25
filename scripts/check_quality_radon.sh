@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_DIRECTORY="."
+TARGET_DIRECTORY="./proto_app/backend"
 
 echo "Checking Python code with radon..."
 RADON_OUTPUT=$(radon cc $TARGET_DIRECTORY --average -s)

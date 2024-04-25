@@ -5,6 +5,7 @@ import { render, screen } from "@testing-library/react";
 import PricePredictionChart from "./components/PricePredictionChart/PricePredictionChart";
 import FinancialTable from "./components/FinancialTable/FinancialTable";
 
+// TESTS: TU-FE-01. Requisito cubierto: RF-06: Visualización de estadísticas y gráficos
 describe("PricePredictionChart", () => {
   const mockDatosFinancieros = {
     TIME_SERIES_MONTHLY_ADJUSTED: {
@@ -44,10 +45,12 @@ describe("FinancialTable", () => {
       cashFlows: [{ fiscalDateEnding: "2021", operatingCashflow: "2000" }],
     };
     render(<FinancialTable {...mockData} />);
-    expect(screen.getByText(/total revenue/i)).toBeInTheDocument();
+    expect(screen.getByText(/Total Revenue/i)).toBeInTheDocument();
     expect(screen.getByText(/5000/i)).toBeInTheDocument();
-    expect(screen.getByText(/total assets/i)).toBeInTheDocument();
+    expect(screen.getByText(/Total Assets/i)).toBeInTheDocument();
     expect(screen.getByText(/10000/i)).toBeInTheDocument();
-    expect(screen.getByText(/operating cash flow/i)).toBeInTheDocument();
+    expect(screen.getByText(/Operating Cash Flow/i)).toBeInTheDocument();
   });
 });
+
+// TESTS: TU-FE-02. Requisito cubierto: RF-07: Búsqueda de empresas
