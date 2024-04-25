@@ -86,9 +86,7 @@ jobs:
     - name: Install frontend dependencies
       run: |
         cd proto_app
-        npm install
         npm install --save-dev prettier
-        npm install --save-dev stylelint stylelint-config-standard
 
   frontend-code-formatting:
     needs: frontend-dependencies
@@ -116,5 +114,5 @@ jobs:
     - name: Run frontend tests
       run: |
         cd proto_app
-        pwd
+        npm install
         npm test 
