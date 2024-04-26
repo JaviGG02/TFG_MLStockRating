@@ -116,4 +116,6 @@ jobs:
         cd proto_app
         npm install
     - name: Run frontend tests
-      run: npm test
+      run: |
+        cd proto_app
+        npm test

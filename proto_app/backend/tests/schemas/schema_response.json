@@ -2,8 +2,8 @@
   "type": "object",
   "properties": {
     "datos_financieros": { "type": "object" },
-    "prediccion": { "type": "object" },
+    "predicciones": { "type": "object" },
     "calificacion": { "type": "object" }
   },
-  "required": ["datos_financieros", "prediccion", "calificacion"]
+  "required": ["datos_financieros", "predicciones", "calificacion"]
 }

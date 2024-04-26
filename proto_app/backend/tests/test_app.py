@@ -90,4 +90,4 @@ def test_api_ticker_invalido(client):
     data = json.loads(response.data)
 
     assert "Error" in data
-    assert data["Error"] == "Información sobre INVALID no disponible"
+    assert data["Error"] == "Ticker (INVALID) data not available"
