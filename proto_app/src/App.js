@@ -41,7 +41,7 @@ function App() {
             // No error
             cargando: false,
             datosFinancieros: responseData.datos_financieros,
-            predicciones: responseData.prediccion,
+            predicciones: responseData.predicciones,
             calificacion: responseData.calificacion,
           });
         } else {

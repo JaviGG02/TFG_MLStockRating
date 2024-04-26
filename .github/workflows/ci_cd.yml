@@ -111,8 +111,9 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-    - name: Run frontend tests
+    - name: Install test dependencies
       run: |
         cd proto_app
         npm install
-        npm test 
+    - name: Run frontend tests
+      run: npm test

@@ -95,7 +95,7 @@ class DataManager:
                 if not downloaded:
                     print(f"Información sobre {self.ticker} no disponible")
                     self.__financial_data = {
-                        "Error": f"Información sobre {self.ticker} no disponible"
+                        "Error": f"Ticker ({self.ticker}) data not available"
                     }
                     break
                 # Caso de superar el limite de acccesos por minuto de la API
@@ -492,7 +492,7 @@ class DataManager:
         # Preparar la respuesta
         self.respuesta = {
             "datos_financieros": self.__financial_data,
-            "prediccion": self.__predictions_data,
+            "predicciones": self.__predictions_data,
             "calificacion": self.__calification_data,
         }
 

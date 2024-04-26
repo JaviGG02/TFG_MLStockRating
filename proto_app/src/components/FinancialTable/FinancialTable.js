@@ -101,7 +101,7 @@ const FinancialTable = ({ incomeStatement, balanceSheet, cashFlows }) => {
 
   return (
     <div className="results-div">
-      <h1 className="financial-title">Informe Financiero Anual</h1>
+      <h1 className="financial-title">Annual Financial Statements</h1>
       <div className="table-wrapper">
         <p className="financial-caption">Income Statement</p>
         <div className="financial-wrapper">
