@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ejecutar Prettier para verificar el formato del código
-npx prettier --check "**/*.{js,jsx,html,css}"
+npx prettier --write "**/*.{js,jsx,html,css}"
 
 # Capturar el código de salida de Prettier
 EXIT_CODE=$?

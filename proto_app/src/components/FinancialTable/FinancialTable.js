@@ -78,7 +78,7 @@ const FinancialTable = ({ incomeStatement, balanceSheet, cashFlows }) => {
     <>
       <thead className="column_index">
         <tr>
-          <th>Elemento</th>
+          <th>Attribute</th>
           {report.map((item) => (
             <th key={item.fiscalDateEnding}>
               {item.fiscalDateEnding.split("-")[0]}
@@ -91,7 +91,9 @@ const FinancialTable = ({ incomeStatement, balanceSheet, cashFlows }) => {
           <tr key={key}>
             <td>{name}</td>
             {report.map((item) => (
-              <td key={`${item.fiscalDateEnding}-${key}`}>{item[key]}</td>
+              <td key={`${item.fiscalDateEnding}-${key}`}>
+                {item[key] / 10 ** 6}
+              </td>
             ))}
           </tr>
         ))}
@@ -102,6 +104,7 @@ const FinancialTable = ({ incomeStatement, balanceSheet, cashFlows }) => {
   return (
     <div className="results-div">
       <h1 className="financial-title">Annual Financial Statements</h1>
+      <p className="disclaimer">(All figures in millions of dollars)</p>
       <div className="table-wrapper">
         <p className="financial-caption">Income Statement</p>
         <div className="financial-wrapper">

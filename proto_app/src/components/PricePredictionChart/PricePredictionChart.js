@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
 
 const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
@@ -23,12 +22,12 @@ const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
     ...new Set([...fechasReales, ...fechasPredicciones]),
   ].sort();
 
-  const data = fechasUnificadas.map((fecha) => ({
-    fecha,
-    PrecioReal: fechasReales.includes(fecha)
-      ? datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED[fecha]
+  const data = fechasUnificadas.map((date) => ({
+    date: date,
+    RealPrice: fechasReales.includes(date)
+      ? datosFinancieros.TIME_SERIES_MONTHLY_ADJUSTED[date]
       : null,
-    Predicción: fechasPredicciones.includes(fecha) ? predicciones[fecha] : null,
+    Prediction: fechasPredicciones.includes(date) ? predicciones[date] : null,
   }));
 
   return (
@@ -39,19 +38,19 @@ const PricePredictionChart = ({ datosFinancieros, predicciones }) => {
       height={400}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="fecha" />
+      <XAxis dataKey="date" />
       <YAxis />
       <Tooltip />
       <Legend />
       <Line
         type="monotone"
-        dataKey="PrecioReal"
+        dataKey="RealPrice"
         stroke="#8884d8"
         dot={{ fill: "#8884d8" }}
       />
       <Line
         type="monotone"
-        dataKey="Predicción"
+        dataKey="Prediction"
         stroke="#ff6347"
         dot={{ fill: "#ff6347" }}
       />

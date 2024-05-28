@@ -33,23 +33,23 @@ describe("PricePredictionChart", () => {
       />,
     );
     // Se displayean las leyendas, por tanto el grafico tambien
-    expect(screen.getByText(/PrecioReal/i)).toBeInTheDocument();
-    expect(screen.getByText(/Predicción/i)).toBeInTheDocument();
+    expect(screen.getByText(/RealPrice/i)).toBeInTheDocument();
+    expect(screen.getByText(/Prediction/i)).toBeInTheDocument();
   });
 });
 
 describe("FinancialTable", () => {
   test("renders financial data correctly", () => {
     const mockData = {
-      incomeStatement: [{ fiscalDateEnding: "2021", totalRevenue: "5000" }],
-      balanceSheet: [{ fiscalDateEnding: "2021", totalAssets: "10000" }],
-      cashFlows: [{ fiscalDateEnding: "2021", operatingCashflow: "2000" }],
+      incomeStatement: [{ fiscalDateEnding: "2021", totalRevenue: "5000000" }],
+      balanceSheet: [{ fiscalDateEnding: "2021", totalAssets: "10000000" }],
+      cashFlows: [{ fiscalDateEnding: "2021", operatingCashflow: "2000000" }],
     };
     render(<FinancialTable {...mockData} />);
     expect(screen.getByText(/Total Revenue/i)).toBeInTheDocument();
-    expect(screen.getByText(/5000/i)).toBeInTheDocument();
+    expect(screen.getByText(/5/i)).toBeInTheDocument();
     expect(screen.getByText(/Total Assets/i)).toBeInTheDocument();
-    expect(screen.getByText(/10000/i)).toBeInTheDocument();
+    expect(screen.getByText(/10/i)).toBeInTheDocument();
     expect(screen.getByText(/Operating Cash Flow/i)).toBeInTheDocument();
   });
 });
