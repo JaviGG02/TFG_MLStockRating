@@ -8,7 +8,8 @@ Carpetas:
     + src: contiene la gestión del fronted, módulo creado empleando el framework de React.
     + backend: contiene la gestión del backend, el cual emplea el framework de Flask.
 - research_development: carpeta donde se encuentran todos los archivos empleados para la investigación y desarrollo del proyecto: obtención y gestión de los datos, análisis y preprocesado y desarrollo de modelos ML
-- scripts: carpeta donde se alojan los scripts necesarios para el pipeline de CI/CD de la aplicacióno proto_app
+- scripts: carpeta donde se almacenan todos los scripts necesarios para la pipeline CI/CD
+
 
 ## Autor
 Javier García García - LinkedIn: https://www.linkedin.com/in/javier-garc%C3%ADa-garc%C3%ADa-1ba311229/
