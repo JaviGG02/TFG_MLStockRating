@@ -2,17 +2,28 @@
 Modulo encargado de la gestion de la clase DataManager
 """
 
+# pylint: disable=E0401
 from dataclasses import dataclass, field
 from typing import Union
 from datetime import datetime, timedelta
 import json
+import os
 import time
+from pathlib import Path
 import requests
 import pandas as pd
 import numpy as np
 from joblib import load
+from data_manager_aux import (
+    closest_price_from_df,
+    replace_values_in_nested_dict,
+    ratio_calculation,
+    geometric_mean_growth_rate,
+    score_for_ratio,
+)
 
-# Gestion de constantes
+
+# Gestion de constantes y modelo
 FINANCIAL_DATA_ATTRIBUTES: tuple = (
     "TIME_SERIES_MONTHLY_ADJUSTED",
     "INCOME_STATEMENT",
@@ -21,17 +32,15 @@ FINANCIAL_DATA_ATTRIBUTES: tuple = (
     "OVERVIEW",
 )
 FUNDAMENTAL_ATTRIBUTES: tuple = ("INCOME_STATEMENT", "BALANCE_SHEET", "CASH_FLOW")
-CONFIG_PATH = (
-    r"C:\Users\xavic\Escritorio\TFG_MLStockRating\proto_app\backend\config.json"
-)
-MODEL_PATH = (
-    r"C:\Users\xavic\Escritorio\TFG_MLStockRating\proto_app\backend\gb_model.joblib"
-)
-
-with open(CONFIG_PATH, "r", encoding="utf-8") as file:
-    config = json.load(file)
-
+CONFIG_PATH = str(Path(__file__).resolve().parents[0]) + "/config.json"
+if os.path.exists(CONFIG_PATH):
+    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
+        config = json.load(file)
+else:
+    api_key = os.getenv("API_KEY")
+    config = {"Alphavantage_key": api_key}
 # Modelo ML
+MODEL_PATH = str(Path(__file__).resolve().parents[0]) + "/gb_model.joblib"
 model = load(MODEL_PATH)
 
 
@@ -66,111 +75,6 @@ class DataManager:
     # Clave de acceso API
     __alpha_vantage_key = config["Alphavantage_key"]
 
-    # Metodos Auxiliares
-    def closest_price_from_df(
-        self, fecha_objetivo: pd.Timestamp
-    ) -> Union[pd.Series | pd.DataFrame]:
-        """
-        Metodo auxiliar para obtener la fila del dataframe de precios con la fecha mas cercana
-        al dia indicado. Devuelve la linea de __prices_df con el precio mas cercano a la fecha
-        objetivo en caso de haberlo encontrado, si no, devuelve una np.Series vacia.
-        """
-        # Calcular la diferencia absoluta entre la fecha objetivo y todas las fechas en el indice
-        diferencias = abs(self.__prices_df.index - fecha_objetivo)
-        # Encuentra la fecha con la diferencia minima, menor a 40 dias
-        fecha_mas_cercana = self.__prices_df.index[diferencias.argmin()]
-
-        if abs(fecha_objetivo - fecha_mas_cercana) > pd.Timedelta(days=40):
-            return pd.Series()  # Devolvemos None
-        return self.__prices_df.loc[fecha_mas_cercana]
-
-    def replace_values_in_nested_dict(
-        self, d: dict, old_values: list, new_value: str
-    ) -> dict:
-        """
-        Metodo auxiliar recursivo para quitar valores no deseados en un diccionario.
-        :d: Diccionario a tratar.
-        :old_values: lista de valores a cambiar.
-        :new_value: valor de cambio.
-        """
-        for k, v in d.items():
-            if isinstance(v, dict):
-                d[k] = self.replace_values_in_nested_dict(v, old_values, new_value)
-            elif str(v) in old_values:
-                d[k] = new_value
-        return d
-
-    def ratio_calculation(self, operation: callable, default: any = None) -> any:
-        """
-        Metodo auxiliar que permite el control de las operaciones de ratios
-        """
-        try:
-            return operation()
-        except ZeroDivisionError:
-            return default
-
-    def geometric_mean_growth_rate(
-        self, data: pd.DataFrame, column: str, y_periods: int = 5
-    ):
-        """
-        Metodo auxiliar para el calculo del crecimiento de la media geometrica, lo que nos permite
-        saber si un atributo a crecido o decrecido en el periodo establecido
-        """
-        filtered_data = pd.to_numeric(
-            data[column].tail(3 * y_periods + 1), errors="ignore"
-        )
-        if len(filtered_data) < 2:
-            return 0
-        # Calculo de los crecimientos año a año
-        growth_factors = []
-        mean_growth_factors = 0
-        for i in range(1, len(filtered_data)):
-            try:
-                growth = (
-                    filtered_data.iloc[i] - filtered_data.iloc[i - 1]
-                ) / filtered_data.iloc[i]
-            except TypeError:
-                growth = 0
-            growth_factors.append(growth)
-            mean_growth_factors += abs(growth)
-        mean_growth_factors /= len(growth_factors)
-
-        # Calculo de GMGR
-        geometric_factors = []
-        recorded_periods, skipped_periods = 0, 0
-        for g in growth_factors:
-            # Excluir crecimientos negativos (resultarían en factores geométricos negativos
-            # y numeros complejos) y outliers que sobrepasen excesivamente la media
-            # de growth factors
-            if g > -1 and abs(g) < abs(mean_growth_factors * 5):
-                geometric_factors.append(1 + g)
-                recorded_periods += 1
-            else:
-                skipped_periods += 1
-
-        # Evitar división por cero si la lista está vacía
-        if not geometric_factors:
-            return 0
-        # En caso de no haber el doble de ciclos "positivos" que "negativos" devolvemos 0
-        if skipped_periods > 0 and recorded_periods / skipped_periods < 3:
-            return 0
-
-        gmgr = np.prod(geometric_factors) ** (1 / len(geometric_factors)) - 1
-        return gmgr * 100
-
-    def score_for_ratio(self, attribute_value: float, threshold: float):
-        """
-        Metodo para asignar una calificacion a un ratio
-        """
-        # En caso de estar por encima del threshold: maxima nota
-        if attribute_value >= threshold:
-            return 100
-        # En caso de ser negativo: factor de amplificacion, aplicando como limite -100
-        if attribute_value < -3:
-            return max(10 * attribute_value / threshold, -100)
-        # else
-        return max(100 * (attribute_value / threshold), -100)
-
     # Metodos principales
 
     def download_financial_data(self) -> dict:
@@ -182,26 +86,31 @@ class DataManager:
 
         print(f"Obteniendo los datos de {self.ticker}")
         # Obtención de fundamentales y precios
-        for element in FINANCIAL_DATA_ATTRIBUTES:
-            print(f"{element} descargado")
-            url = f"https://www.alphavantage.co/query?function={element}&symbol={self.ticker}&apikey={self.__alpha_vantage_key}"  # pylint: disable=C0301
-            r = requests.get(url, timeout=None)
-            downloaded = r.json()
-            if not downloaded:
-                print(f"Información sobre {self.ticker} no disponible")
-                self.__financial_data = {
-                    "Error": f"Información sobre {self.ticker} no disponible"
-                }
-                break
-            # Caso de superar el limite de acccesos por minuto de la API
-            while "Note" in downloaded:
-                print("Waiting for 20 seconds for AlphaVantage API limit!")
-                time.sleep(20)
-                r = requests.get(url, timeout=None)
+        try:
+            for element in FINANCIAL_DATA_ATTRIBUTES:
+                print(f"{element} descargado")
+                url = f"https://www.alphavantage.co/query?function={element}&symbol={self.ticker}&apikey={self.__alpha_vantage_key}"  # pylint: disable=C0301
+                r = requests.get(url, timeout=1000)
                 downloaded = r.json()
+                if not downloaded:
+                    print(f"Información sobre {self.ticker} no disponible")
+                    self.__financial_data = {
+                        "Error": f"Ticker ({self.ticker}) data not available"
+                    }
+                    break
+                # Caso de superar el limite de acccesos por minuto de la API
+                while "Note" in downloaded:
+                    print("Waiting for 20 seconds for AlphaVantage API limit!")
+                    time.sleep(20)
+                    r = requests.get(url, timeout=1000)
+                    downloaded = r.json()
 
-            self.__financial_data[element] = downloaded
+                self.__financial_data[element] = downloaded
 
+        except requests.exceptions.JSONDecodeError:
+            self.__financial_data = {
+                "Error": f"Información sobre {self.ticker} no disponible"
+            }
         return self.__financial_data
 
     def preprocess_financial_data(self) -> pd.DataFrame:
@@ -243,7 +152,7 @@ class DataManager:
             for date, values in self.__financial_data["TIME_SERIES_MONTHLY_ADJUSTED"][
                 "Monthly Adjusted Time Series"
             ].items()
-        }  # pylint: disable=C0301
+        }
         prices_dict = {"TIME_SERIES_MONTHLY_ADJUSTED": adjusted_close}
         self.__prices_df = pd.DataFrame.from_dict(prices_dict, orient="columns")
 
@@ -251,50 +160,58 @@ class DataManager:
         self.__prices_df.index = pd.to_datetime(self.__prices_df.index)
         self.__financial_df["fiscalDateEnding"] = pd.to_datetime(
             self.__financial_df["fiscalDateEnding"]
-        )  # pylint: disable=C0301
+        )
         self.__financial_df["sharePrice"] = self.__financial_df[
             "fiscalDateEnding"
-        ].apply(lambda date: self.closest_price_from_df(date))
+        ].apply(
+            lambda date: closest_price_from_df(
+                prices_df=self.__prices_df, fecha_objetivo=date
+            )
+        )
         self.__financial_df["1y_sharePrice"] = self.__financial_df[
             "fiscalDateEnding"
-        ].apply(lambda date: self.closest_price_from_df(date + timedelta(days=365)))
+        ].apply(
+            lambda date: closest_price_from_df(
+                prices_df=self.__prices_df, fecha_objetivo=date + timedelta(days=365)
+            )
+        )
         self.__financial_df = self.__financial_df.apply(pd.to_numeric, errors="ignore")
         # Calculos de los ratios necesarios
         self.__financial_df["EPS"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: row["netIncome"] / row["commonStock"], default=np.nan
             ),
             axis=1,
         )
         self.__financial_df["P/E"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: row["sharePrice"] / row["EPS"], default=np.nan
             ),
             axis=1,
         )
         self.__financial_df["ROE"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: row["netIncome"] / row["totalShareholderEquity"],
                 default=np.nan,
             ),
             axis=1,
         )
         self.__financial_df["ROA"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: row["netIncome"] / row["totalAssets"], default=np.nan
             ),
             axis=1,
         )
         self.__financial_df["bookValue"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: (row["totalAssets"] - row["totalLiabilities"])
-                / row["commonStockSharesOutstanding"],  # pylint: disable=C0301
+                / row["commonStockSharesOutstanding"],
                 default=np.nan,
             ),
             axis=1,
         )
         self.__financial_df["currentRatio"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: (row["totalCurrentAssets"])
                 / row["totalCurrentLiabilities"],
                 default=np.nan,
@@ -302,7 +219,7 @@ class DataManager:
             axis=1,
         )
         self.__financial_df["debtEquityRatio"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: (row["totalLiabilities"])
                 / row["totalShareholderEquity"],
                 default=np.nan,
@@ -310,7 +227,7 @@ class DataManager:
             axis=1,
         )
         self.__financial_df["freeCashFlow"] = self.__financial_df.apply(
-            lambda row: self.ratio_calculation(
+            lambda row: ratio_calculation(
                 operation=lambda: (row["operatingCashflow"])
                 - row["capitalExpenditures"],
                 default=np.nan,
@@ -324,14 +241,14 @@ class DataManager:
         # Media del sector anual
         self.__financial_df["fiscalDateEnding"] = pd.to_datetime(
             self.__financial_df["fiscalDateEnding"]
-        )  # pylint: disable=C0301
+        )
         self.__financial_df["year"] = self.__financial_df["fiscalDateEnding"].dt.year
 
         mean_price_by_sector_year = (
             self.__financial_df.groupby(["sector", "year"])["sharePrice"]
             .mean()
             .reset_index(name="meanSectorPrice")
-        )  # pylint: disable=C0301
+        )
         self.__financial_df = self.__financial_df.merge(
             mean_price_by_sector_year, on=["sector", "year"]
         )
@@ -370,7 +287,7 @@ class DataManager:
         current_date = datetime.now() - timedelta(days=365)
         mask = self.__ml_data["1y_sharePrice"].notna() | (
             self.__ml_data["fiscalDateEnding"] >= current_date
-        )  # pylint: disable=C0301
+        )
         self.__ml_data = self.__ml_data[mask].reset_index(drop=True)
 
         return self.__ml_data
@@ -497,14 +414,14 @@ class DataManager:
                                     self.__financial_df["sharePrice"].iloc[-1]
                                     / attribute_value
                                 )
-                            attribute_item = self.score_for_ratio(
+                            attribute_item = score_for_ratio(
                                 attribute_value, ratio_values[attribute]
                             )
                         else:
                             attribute_item = 0
                     # Otros Fundamentales
                     else:
-                        attribute_item = self.geometric_mean_growth_rate(
+                        attribute_item = geometric_mean_growth_rate(
                             self.__financial_df, attribute, 5
                         )
                         # Aplicamos factor de amplificacion a gmgr para que tengan peso en la nota
@@ -543,14 +460,10 @@ class DataManager:
         )
         predictions_df["fiscalDateEnding"] = self.__ml_data[
             "fiscalDateEnding"
-        ] + timedelta(
-            days=365
-        )  # pylint: disable=C0301
+        ] + timedelta(days=365)
         predictions_df["fiscalDateEnding"] = predictions_df[
             "fiscalDateEnding"
-        ].dt.strftime(
-            "%Y-%m"
-        )  # pylint: disable=C0301
+        ].dt.strftime("%Y-%m")
         self.__predictions_data = dict(
             zip(
                 predictions_df["fiscalDateEnding"],
@@ -569,7 +482,7 @@ class DataManager:
         )
 
         self.__financial_data["TIME_SERIES_MONTHLY_ADJUSTED"] = (
-            self.replace_values_in_nested_dict(
+            replace_values_in_nested_dict(
                 self.__financial_data["TIME_SERIES_MONTHLY_ADJUSTED"],
                 ["nan", "NaN", "N/A"],
                 "None",
@@ -579,7 +492,7 @@ class DataManager:
         # Preparar la respuesta
         self.respuesta = {
             "datos_financieros": self.__financial_data,
-            "prediccion": self.__predictions_data,
+            "predicciones": self.__predictions_data,
             "calificacion": self.__calification_data,
         }
 

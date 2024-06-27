@@ -1,5 +1,5 @@
 """
-Modulo encargado de habilitar y gestionar las llamadas al backend
+Modulo API encargado de habilitar y gestionar las llamadas al backend.
 """
 
 # Flask
@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 # Gestion de funciones
-from data_manager import DataManager
+from data_manager import DataManager  # pylint: disable=E0401
 
 # Flask App
 app = Flask(__name__)
@@ -41,4 +41,4 @@ def obtener_datos():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

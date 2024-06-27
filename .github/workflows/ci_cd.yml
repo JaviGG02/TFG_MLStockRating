@@ -5,13 +5,16 @@ on:
     branches:
       - main
       - Code_Formating
+      - Code_Testing
   pull_request:
     branches:
       - main
       - Code_Formating
+      - Code_Testing
 
 jobs:
-  configure-dependencies:
+  # BACKEND PIPELINE
+  backend-dependencies:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -24,21 +27,20 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip  # Actualizar pip
-        pip install -r requirements.txt
-        pip install jsonschema Flask requests
+        python -m pip install --upgrade pip
 
-  code-preparation:
-    needs: configure-dependencies
+  backend-code-formatting:
+    needs: backend-dependencies
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - name: Set executable permissions for scripts
-      run: chmod +x ./scripts/*.sh
+      run: chmod +x ./scripts/format_code_black.sh ./scripts/check_quality_pylint.sh ./scripts/check_quality_flake8.sh
     - name: Install code formatting and quality tools
       run: |
         pip install black
-        pip install pylint flake8
+        pip install pylint 
+        pip install flake8
     - name: Code formatting with Black
       run: ./scripts/format_code_black.sh
     - name: Code quality checks
@@ -46,28 +48,74 @@ jobs:
         ./scripts/check_quality_pylint.sh
         ./scripts/check_quality_flake8.sh
 
-  # tests:
-  #   needs: code-preparation
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Install test dependencies
-  #     run: |
-  #       pip install pytest flask jsonschema pydantic coverage
-  #   - name: Run tests
-  #     run: ./scripts/run_tests.sh
-  #   - name: Test coverage
-  #     run: ./scripts/check_test_coverage.sh
+  backend-tests:
+    needs: backend-code-formatting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set executable permissions for scripts
+      run: chmod +x ./scripts/run_tests.sh ./scripts/check_quality_radon.sh ./scripts/check_quality_bandit.sh
+    - name: Install test dependencies
+      run: |
+        pip install pytest flask
+        pip install -r requirements.txt
+    - name: Export API Key to Environment
+      run: echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
+    - name: Run tests
+      run: |
+        ./scripts/run_tests.sh
+    - name: Install other test tools
+      run: |
+        pip install radon bandit
+    - name: Run complexity text
+      run: |
+        ./scripts/check_quality_radon.sh
+    - name: Run security test checks
+      run: |
+        ./scripts/check_quality_bandit.sh
 
-  # other-tests:
-  #   needs: tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Install other test tools
-  #     run: |
-  #       pip install radon bandit
-  #   - name: Other quality checks
-  #     run: |
-  #       ./scripts/check_quality_radon.sh
-  #       ./scripts/check_quality_bandit.sh
+  # FRONTEND PIPELINE
+  frontend-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: Install frontend dependencies
+      run: |
+        cd proto_app
+        npm install --save-dev prettier
+
+  frontend-code-formatting:
+    needs: frontend-dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: Set executable permissions for scripts
+      run: chmod +x ./scripts/check_format_frontend.sh
+    - name: Run code formating check
+      run: ./scripts/check_format_frontend.sh
+
+  frontend-tests:
+    needs: frontend-code-formatting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: Install test dependencies
+      run: |
+        cd proto_app
+        npm install
+    - name: Run frontend tests
+      run: |
+        cd proto_app
+        npm test

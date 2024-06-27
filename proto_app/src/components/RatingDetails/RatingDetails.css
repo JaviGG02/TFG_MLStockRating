@@ -1,87 +1,86 @@
 /* RatingDetails.css */
-  .rating-bar-container {
-    position: relative;
-    margin-bottom: 5px;
-    text-align: left;
-  }
-  
-  .rating-bar {
-    height: 20px;
-    border: 1px solid #ccc;
-  }
-  
-  .rating-details-button {
-    background-color: #3498db;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .rating-details-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    text-align: center;
-    width: 35rem;
-  }
+.rating-bar-container {
+  position: relative;
+  margin-bottom: 5px;
+  text-align: left;
+}
 
-  .backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(104, 104, 104, 0.623);
-    z-index: 99;
-  }
-  
-  .close-modal {
-    float: right;
-    border: none;
-    background: none;
-    cursor: pointer;
-    scale: 1.2
-  }
-  .close-modal:hover {
-    scale: 1.5;
-  }
-  
-  .tooltip {
-    position: absolute;
-    top: 100%; 
-    left: 50%;
-    width: 35rem;
-    transform: translateX(-50%);
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    white-space: nowrap;
-    z-index: 100;
-    text-wrap: wrap;
-    line-break: strict;
-  }
-  
-  .tooltip::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    background-color: #fff;
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    width: 10px;
-    height: 10px;
-    z-index: -1;
-  }
-  
+.rating-bar {
+  height: 20px;
+  border: 1px solid #ccc;
+}
+
+.rating-details-button {
+  background-color: #3498db;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.rating-details-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  text-align: center;
+  width: 35rem;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(104, 104, 104, 0.623);
+  z-index: 99;
+}
+
+.close-modal {
+  float: right;
+  border: none;
+  background: none;
+  cursor: pointer;
+  scale: 1.2;
+}
+.close-modal:hover {
+  scale: 1.5;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 35rem;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  z-index: 100;
+  text-wrap: wrap;
+  line-break: strict;
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  width: 10px;
+  height: 10px;
+  z-index: -1;
+}
